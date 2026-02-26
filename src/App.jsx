@@ -109,7 +109,7 @@ function App() {
             <ul className="nav-links">
               <li><a href="#">Сүм чуулган</a></li>
               <li><a href="#">Библи судлал</a></li>
-              <li><a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer">Гэрчлэл</a></li>
+              <li><Link to="/testimonies">Гэрчлэл</Link></li>
               <li><a href="#">Залбирал</a></li>
               <li><a href="#">Гэр бүл</a></li>
               <li><a href="#">Номлол</a></li>

@@ -613,6 +613,29 @@ footer {
   font-weight: 600;
 }
 
+.forgot-password-row {
+  text-align: right;
+  margin-bottom: 1rem;
+  margin-top: -0.5rem;
+}
+
+.forgot-link {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+
+.forgot-link:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
 /* ===== Upload Zone Styles ===== */
 
 .image-mode-toggle {
@@ -933,5 +956,705 @@ footer {
 
   .user-name-nav {
     display: none;
+  }
+}
+
+/* ===== Facebook-Style Social Feed ===== */
+
+.feed-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.feed-hero {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem 0;
+}
+
+.feed-title {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+}
+
+.feed-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ===== Create Post Card ===== */
+
+.feed-create-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.feed-create-top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.feed-create-input-placeholder {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 24px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.feed-create-input-placeholder:hover {
+  background: var(--border-color);
+}
+
+.feed-create-input-placeholder.hidden {
+  display: none;
+}
+
+.feed-create-form {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.feed-input {
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: var(--font-sans);
+  background: var(--input-bg);
+  color: var(--text-color);
+  transition: border-color 0.2s;
+}
+
+.feed-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.feed-input-title {
+  font-weight: 600;
+}
+
+.feed-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+}
+
+.feed-media-preview {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.feed-media-preview img,
+.feed-media-preview video {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.feed-media-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.feed-media-remove:hover {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.feed-uploading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.feed-create-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border-color);
+  margin-top: 0.2rem;
+}
+
+.feed-create-media {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.feed-action-media-btn {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.feed-action-media-btn:hover {
+  background: var(--border-color);
+  color: var(--text-color);
+}
+
+.feed-action-media-btn:disabled {
+  opacity: 0.4;
+  cursor: wait;
+}
+
+.feed-create-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.feed-cancel-btn {
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.feed-cancel-btn:hover {
+  background: var(--border-color);
+  color: var(--text-color);
+}
+
+.feed-post-btn {
+  padding: 0.45rem 1.3rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent-color);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.feed-post-btn:hover {
+  opacity: 0.9;
+}
+
+.feed-post-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.feed-login-card {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.feed-login-card p {
+  color: var(--text-muted);
+  margin-bottom: 0.8rem;
+}
+
+/* ===== Feed List ===== */
+
+.feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.feed-empty {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--text-muted);
+}
+
+/* ===== Feed Card (Post) ===== */
+
+.feed-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s;
+}
+
+.feed-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feed-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.25rem 0;
+}
+
+.feed-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-color), #c0392b);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.feed-card-user {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.feed-card-username {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.feed-card-time {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* 3-dot Menu */
+.feed-menu-wrap {
+  position: relative;
+}
+
+.feed-menu-btn {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 0.25rem 0.5rem;
+  border-radius: 50%;
+  transition: background 0.2s;
+  line-height: 1;
+  letter-spacing: 2px;
+}
+
+.feed-menu-btn:hover {
+  background: var(--border-color);
+}
+
+.feed-menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-width: 140px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 50;
+  overflow: hidden;
+  animation: fadeIn 0.15s ease;
+}
+
+.feed-menu-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.feed-menu-dropdown button:hover {
+  background: var(--border-color);
+}
+
+/* Post Content */
+.feed-card-title {
+  font-size: 1.15rem;
+  line-height: 1.3;
+  padding: 0.75rem 1.25rem 0;
+}
+
+.feed-card-content {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-color);
+  padding: 0.6rem 1.25rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.feed-inline-link {
+  color: var(--accent-color);
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.feed-inline-link:hover {
+  opacity: 0.8;
+}
+
+/* Post Media */
+.feed-card-media {
+  margin: 0;
+  overflow: hidden;
+}
+
+.feed-card-img {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  display: block;
+}
+
+.feed-card-video {
+  width: 100%;
+  max-height: 500px;
+  display: block;
+  background: #000;
+}
+
+.feed-card-link {
+  display: block;
+  padding: 0.6rem 1rem;
+  margin: 0 1.25rem 0.5rem;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--accent-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  word-break: break-all;
+}
+
+.feed-card-link:hover {
+  background: rgba(139, 0, 0, 0.05);
+  border-color: var(--accent-color);
+}
+
+/* Like & Comment Counts */
+.feed-counts {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.feed-like-count {
+  font-size: 0.85rem;
+}
+
+.feed-comment-count {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.feed-comment-count:hover {
+  color: var(--text-color);
+  text-decoration: underline;
+}
+
+/* Action Bar */
+.feed-action-bar {
+  display: flex;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  margin: 0;
+}
+
+.feed-action-btn {
+  flex: 1;
+  padding: 0.6rem 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.feed-action-btn:hover {
+  background: var(--border-color);
+  color: var(--text-color);
+}
+
+.feed-action-btn.active {
+  color: #e74c3c;
+}
+
+.feed-action-btn.active:hover {
+  color: #c0392b;
+}
+
+/* ===== Comments ===== */
+
+.feed-comments {
+  padding: 0.5rem 1.25rem 1rem;
+}
+
+.feed-show-more-comments {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.4rem 0;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s;
+}
+
+.feed-show-more-comments:hover {
+  color: var(--text-color);
+  text-decoration: underline;
+}
+
+.feed-comment {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+  align-items: flex-start;
+}
+
+.feed-comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.feed-comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.feed-comment-bubble {
+  background: var(--input-bg);
+  border-radius: 18px;
+  padding: 0.5rem 0.9rem;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.feed-comment-name {
+  display: block;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--text-color);
+}
+
+.feed-comment-text {
+  display: block;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--text-color);
+  word-break: break-word;
+}
+
+.feed-comment-meta {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.15rem 0.9rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.feed-comment-delete {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 600;
+}
+
+.feed-comment-delete:hover {
+  color: #e74c3c;
+  text-decoration: underline;
+}
+
+/* Comment Input */
+.feed-comment-input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+
+.feed-comment-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.feed-comment-input-wrap:focus-within {
+  border-color: var(--accent-color);
+}
+
+.feed-comment-input {
+  flex: 1;
+  padding: 0.5rem 0.9rem;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  color: var(--text-color);
+  outline: none;
+}
+
+.feed-comment-send {
+  padding: 0.4rem 0.7rem;
+  border: none;
+  background: transparent;
+  color: var(--accent-color);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.feed-comment-send:hover {
+  opacity: 0.7;
+}
+
+.feed-comment-send:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.feed-comment-login {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0;
+}
+
+.feed-comment-login a {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+/* ===== Responsive: Feed ===== */
+
+@media (max-width: 768px) {
+  .feed-container {
+    padding: 0 0.5rem;
+  }
+
+  .feed-title {
+    font-size: 1.5rem;
+  }
+
+  .feed-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .feed-card-content {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .feed-action-btn {
+    font-size: 0.8rem;
+  }
+
+  .feed-create-media {
+    flex-wrap: wrap;
+  }
+
+  .feed-counts,
+  .feed-comments {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .feed-card-header {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .feed-card-title {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .feed-card-link {
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
 }
