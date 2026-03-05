@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabase';
+import { uploadToCloudinary } from './lib/cloudinary';
 
 const ADMIN_PASSWORD = 'itgel2026';
 
@@ -98,26 +99,15 @@ function Admin() {
 
         setUploading(true);
 
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-
-        const { data, error } = await supabase.storage
-            .from('news-images')
-            .upload(fileName, file);
-
-        if (error) {
-            showMessage('Зураг upload хийхэд алдаа: ' + error.message, 'error');
+        try {
+            const result = await uploadToCloudinary(file, 'image');
+            setForm({ ...form, image: result.url });
+            showMessage('Зураг амжилттай Cloudinary руу хуулагдлаа! ☁️');
+        } catch (error) {
+            showMessage('Зураг хуулахад алдаа: ' + error.message, 'error');
+        } finally {
             setUploading(false);
-            return;
         }
-
-        const { data: { publicUrl } } = supabase.storage
-            .from('news-images')
-            .getPublicUrl(fileName);
-
-        setForm({ ...form, image: publicUrl });
-        showMessage('Зураг амжилттай upload хийгдлээ! 📸');
-        setUploading(false);
     }
 
     function handleFileChange(e) {

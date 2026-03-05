@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabase';
+import { uploadToCloudinary } from './lib/cloudinary';
 
 function Audiobooks() {
     const [books, setBooks] = useState([]);
@@ -170,18 +171,15 @@ function Audiobooks() {
         if (file.size > 200 * 1024 * 1024) {
             showMsg('Файлын хэмжээ 200MB-аас бага байх ёстой!', 'error'); return;
         }
-        setUploading(true);
-        const ext = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${ext}`;
-        const { error } = await supabase.storage.from('audiobooks').upload(fileName, file);
-        if (error) {
-            showMsg('Файл upload алдаа: ' + error.message, 'error');
-            setUploading(false); return;
+        try {
+            const result = await uploadToCloudinary(file, 'auto');
+            setForm({ ...form, audio_url: result.url });
+            showMsg('Файл амжилттай Cloudinary руу хуулагдлаа! ☁️');
+        } catch (error) {
+            showMsg('Файл хуулахад алдаа: ' + error.message, 'error');
+        } finally {
+            setUploading(false);
         }
-        const { data: { publicUrl } } = supabase.storage.from('audiobooks').getPublicUrl(fileName);
-        setForm({ ...form, audio_url: publicUrl });
-        showMsg('Файл амжилттай upload хийгдлээ! 📚');
-        setUploading(false);
     }
 
     function handleDrag(e) {
@@ -251,7 +249,7 @@ function Audiobooks() {
 
             <header>
                 <div className="container">
-                    <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>ИТГЭЛИЙН ЗАМ</Link>
+                    <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>FAITH NEWS</Link>
                     <div className="date-bar">
                         <span>📚 Сонсдог Ном</span>
                         <span>{books.length} ном</span>
@@ -499,7 +497,7 @@ function Audiobooks() {
 
             <footer style={{ marginBottom: currentBook ? '90px' : '0' }}>
                 <div className="container">
-                    <h2 className="site-title" style={{ fontSize: '2rem' }}>ИТГЭЛИЙН ЗАМ</h2>
+                    <h2 className="site-title" style={{ fontSize: '2rem' }}>FAITH NEWS</h2>
                     <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>© 2026 Христийн Мэдээ Төв.</p>
                     <ul className="nav-links" style={{ gap: '1rem', flexWrap: 'wrap' }}>
                         <li><Link to="/">Нүүр</Link></li>

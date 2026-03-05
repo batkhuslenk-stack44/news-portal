@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabase';
+import { uploadToCloudinary } from './lib/cloudinary';
 
 function Songs() {
     const [songs, setSongs] = useState([]);
@@ -207,29 +208,17 @@ function Songs() {
             return;
         }
 
-        setUploading(true);
-
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
         const isVideo = allowedVideo.includes(file.type);
 
-        const { data, error } = await supabase.storage
-            .from('worship-songs')
-            .upload(fileName, file);
-
-        if (error) {
-            showMsg('Файл upload хийхэд алдаа: ' + error.message, 'error');
+        try {
+            const result = await uploadToCloudinary(file, isVideo ? 'video' : 'auto');
+            setForm({ ...form, audio_url: result.url, audio_type: isVideo ? 'video' : 'audio' });
+            showMsg('Файл амжилттай Cloudinary руу хуулагдлаа! ☁️');
+        } catch (error) {
+            showMsg('Файл хуулахад алдаа: ' + error.message, 'error');
+        } finally {
             setUploading(false);
-            return;
         }
-
-        const { data: { publicUrl } } = supabase.storage
-            .from('worship-songs')
-            .getPublicUrl(fileName);
-
-        setForm({ ...form, audio_url: publicUrl, audio_type: isVideo ? 'video' : 'audio' });
-        showMsg('Файл амжилттай upload хийгдлээ! 🎵');
-        setUploading(false);
     }
 
     function handleFileChange(e) {
@@ -327,7 +316,7 @@ function Songs() {
             <header>
                 <div className="container">
                     <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>
-                        ИТГЭЛИЙН ЗАМ
+                        FAITH NEWS
                     </Link>
                     <div className="date-bar">
                         <span>🎵 Магтаал Дуу</span>
@@ -688,7 +677,7 @@ function Songs() {
 
             <footer style={{ marginBottom: currentSong ? '90px' : '0' }}>
                 <div className="container">
-                    <h2 className="site-title" style={{ fontSize: '2rem' }}>ИТГЭЛИЙН ЗАМ</h2>
+                    <h2 className="site-title" style={{ fontSize: '2rem' }}>FAITH NEWS</h2>
                     <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>© 2026 Христийн Мэдээ Төв. Бүх эрх хуулиар хамгаалагдсан.</p>
                     <ul className="nav-links" style={{ gap: '1rem', flexWrap: 'wrap' }}>
                         <li><Link to="/">Нүүр хуудас</Link></li>

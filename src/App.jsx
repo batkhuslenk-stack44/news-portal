@@ -100,7 +100,7 @@ function App() {
     <div className="app">
       <header>
         <div className="container">
-          <h1 className="site-title">ИТГЭЛИЙН ЗАМ</h1>
+          <h1 className="site-title">FAITH NEWS</h1>
           <div className="date-bar">
             <span>{currentDate}</span>
             <span>Хувилбар LXXIV — Дугаар 256</span>
@@ -197,7 +197,7 @@ function App() {
 
       <footer>
         <div className="container">
-          <h2 className="site-title" style={{ fontSize: '2rem' }}>ИТГЭЛИЙН ЗАМ</h2>
+          <h2 className="site-title" style={{ fontSize: '2rem' }}>FAITH NEWS</h2>
           <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>© 2026 Христийн Мэдээ Төв. Бүх эрх хуулиар хамгаалагдсан.</p>
           <ul className="nav-links" style={{ gap: '1rem', flexWrap: 'wrap' }}>
             <li><a href="#">Нууцлалын бодлого</a></li>
