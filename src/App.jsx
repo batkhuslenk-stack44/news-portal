@@ -113,6 +113,8 @@ function App() {
               <li><a href="#">Залбирал</a></li>
               <li><a href="#">Гэр бүл</a></li>
               <li><a href="#">Номлол</a></li>
+              <li><Link to="/songs">🎵 Магтаал дуу</Link></li>
+              <li><Link to="/audiobooks">📚 Сонсдог ном</Link></li>
               <li><Link to="/admin" className="admin-link">Админ</Link></li>
               {user ? (
                 <>

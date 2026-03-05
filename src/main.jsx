@@ -7,6 +7,8 @@ import Admin from './Admin.jsx'
 import Auth from './Auth.jsx'
 import Article from './Article.jsx'
 import Testimonies from './Testimonies.jsx'
+import Songs from './Songs.jsx'
+import Audiobooks from './Audiobooks.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -18,6 +20,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/register" element={<Auth />} />
         <Route path="/article/:id" element={<Article />} />
         <Route path="/testimonies" element={<Testimonies />} />
+        <Route path="/songs" element={<Songs />} />
+        <Route path="/audiobooks" element={<Audiobooks />} />
         <Route path="/reset-password" element={<Auth />} />
       </Routes>
     </BrowserRouter>
