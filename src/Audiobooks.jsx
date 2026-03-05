@@ -22,6 +22,7 @@ function Audiobooks() {
     const audioRef = useRef(null);
     const progressRef = useRef(null);
     const fileInputRef = useRef(null);
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
     const [form, setForm] = useState({
         title: '',
@@ -282,16 +283,16 @@ function Audiobooks() {
                 <div className="audiobook-hero">
                     <h1 className="serif audiobook-hero-title">📚 Сонсдог Ном</h1>
                     <p className="audiobook-hero-subtitle">Бурханы үгийг сонсож, итгэлээ бэхжүүлэе</p>
-                    {user ? (
+                    {isAdmin ? (
                         <button className="btn btn-primary" style={{ marginTop: '1.2rem' }}
                             onClick={() => setShowForm(!showForm)}>
                             {showForm ? '✕ Хаах' : '➕ Ном нэмэх'}
                         </button>
-                    ) : (
+                    ) : !user ? (
                         <p style={{ marginTop: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                             Ном нэмэхийн тулд <Link to="/login" style={{ color: 'var(--accent-color)', fontWeight: 600 }}>нэвтэрнэ үү</Link>
                         </p>
-                    )}
+                    ) : null}
                 </div>
 
                 {/* Upload Form */}
@@ -445,7 +446,7 @@ function Audiobooks() {
                                         <button className="btn btn-sm btn-primary" onClick={() => playBook(book)}>
                                             {currentBook?.id === book.id && isPlaying ? '⏸ Зогсоох' : '▶ Сонсох'}
                                         </button>
-                                        {user && book.user_id === user.id && (
+                                        {user && (book.user_id === user.id || isAdmin) && (
                                             <button className="btn btn-sm btn-danger" onClick={() => handleDelete(book.id)}>🗑️</button>
                                         )}
                                     </div>

@@ -5,7 +5,7 @@ import { supabase } from './lib/supabase';
 const ADMIN_PASSWORD = 'itgel2026';
 
 function Admin() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('isAdmin') === 'true');
     const [password, setPassword] = useState('');
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -53,9 +53,15 @@ function Admin() {
         e.preventDefault();
         if (password === ADMIN_PASSWORD) {
             setIsAuthenticated(true);
+            localStorage.setItem('isAdmin', 'true');
         } else {
             showMessage('Нууц үг буруу байна!', 'error');
         }
+    }
+
+    function handleLogout() {
+        setIsAuthenticated(false);
+        localStorage.removeItem('isAdmin');
     }
 
     function resetForm() {
@@ -246,7 +252,7 @@ function Admin() {
                         <h1 className="serif" style={{ fontSize: '1.8rem' }}>📰 Мэдээ удирдах</h1>
                         <div style={{ display: 'flex', gap: '1rem' }}>
                             <Link to="/" className="btn btn-secondary">🏠 Нүүр хуудас</Link>
-                            <button onClick={() => setIsAuthenticated(false)} className="btn btn-danger">Гарах</button>
+                            <button onClick={handleLogout} className="btn btn-danger">Гарах</button>
                         </div>
                     </div>
                 </header>

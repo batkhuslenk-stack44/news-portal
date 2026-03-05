@@ -23,6 +23,7 @@ function Songs() {
     const videoRef = useRef(null);
     const progressRef = useRef(null);
     const fileInputRef = useRef(null);
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
     // Upload form state
     const [form, setForm] = useState({
@@ -588,8 +589,8 @@ function Songs() {
                                         {currentSong?.id === song.id && isPlaying ? '⏸' : '▶'}
                                     </button>
 
-                                    {/* Delete (own songs) */}
-                                    {user && song.user_id === user.id && (
+                                    {/* Delete (own songs or admin) */}
+                                    {user && (song.user_id === user.id || isAdmin) && (
                                         <button
                                             className="song-delete-btn"
                                             onClick={(e) => { e.stopPropagation(); handleDeleteSong(song.id); }}

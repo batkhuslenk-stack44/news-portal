@@ -53,6 +53,7 @@ function App() {
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);
+    localStorage.removeItem('isAdmin');
   }
 
   async function fetchNews() {
