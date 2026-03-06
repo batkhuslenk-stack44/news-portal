@@ -36,7 +36,7 @@ function Songs() {
         audio_type: '', // 'audio' or 'video'
     });
 
-    const categories = ['Бүгд', 'Магтаал', 'Залбирал', 'Гэрчлэл'];
+    const categories = ['Бүгд', 'Магтаал', 'Залбирал', 'Монгол магтаал'];
 
     useEffect(() => {
         fetchSongs();
@@ -410,7 +410,7 @@ function Songs() {
                                 >
                                     <option value="Магтаал">🙏 Магтаал</option>
                                     <option value="Залбирал">🕊️ Залбирал</option>
-                                    <option value="Гэрчлэл">✝️ Гэрчлэл</option>
+                                    <option value="Монгол магтаал">🇲🇳 Монгол магтаал</option>
                                 </select>
                             </div>
 
@@ -517,7 +517,7 @@ function Songs() {
                             className={`songs-cat-btn ${activeCategory === cat ? 'active' : ''}`}
                             onClick={() => setActiveCategory(cat)}
                         >
-                            {cat === 'Магтаал' ? '🙏 ' : cat === 'Залбирал' ? '🕊️ ' : cat === 'Гэрчлэл' ? '✝️ ' : ''}
+                            {cat === 'Магтаал' ? '🙏 ' : cat === 'Залбирал' ? '🕊️ ' : cat === 'Монгол магтаал' ? '🇲🇳 ' : ''}
                             {cat}
                         </button>
                     ))}
