@@ -3,10 +3,16 @@
  * This allows uploading files directly from the frontend.
  */
 
-const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dtpelsmic';
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'ml_default1';
 
 export async function uploadToCloudinary(file, resourceType = 'auto') {
+    console.log('=== Cloudinary Upload Debug ===');
+    console.log('Cloud Name:', CLOUD_NAME);
+    console.log('Upload Preset:', UPLOAD_PRESET);
+    console.log('Resource Type:', resourceType);
+    console.log('File:', file?.name, file?.type, file?.size);
+
     if (!CLOUD_NAME || CLOUD_NAME === 'your_cloud_name') {
         throw new Error('Cloudinary Cloud Name тохируулаагүй байна (.env шалгана уу)');
     }
@@ -19,6 +25,7 @@ export async function uploadToCloudinary(file, resourceType = 'auto') {
     formData.append('upload_preset', UPLOAD_PRESET);
 
     const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`;
+    console.log('Upload URL:', url);
 
     try {
         const response = await fetch(url, {
@@ -28,6 +35,7 @@ export async function uploadToCloudinary(file, resourceType = 'auto') {
 
         if (!response.ok) {
             const errorData = await response.json();
+            console.error('Cloudinary Error Response:', JSON.stringify(errorData));
             throw new Error(errorData.error?.message || 'Cloudinary upload failed');
         }
 
