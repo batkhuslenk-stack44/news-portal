@@ -2,28 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 import { uploadToCloudinary } from './lib/cloudinary';
+import { usePlayer } from './context/PlayerContext';
+import Header from './components/Header';
 
 function Songs() {
     const [songs, setSongs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [currentSong, setCurrentSong] = useState(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [progress, setProgress] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
     const [lyricsOpen, setLyricsOpen] = useState(null);
     const [activeCategory, setActiveCategory] = useState('Бүгд');
-    const [volume, setVolume] = useState(0.8);
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
     const [showUploadForm, setShowUploadForm] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [uploadMessage, setUploadMessage] = useState({ text: '', type: '' });
     const [dragActive, setDragActive] = useState(false);
-    const audioRef = useRef(null);
-    const videoRef = useRef(null);
-    const progressRef = useRef(null);
     const fileInputRef = useRef(null);
+
+    const { currentTrack, isPlaying, playTrack, togglePlay } = usePlayer();
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
     // Upload form state
@@ -66,32 +61,6 @@ function Songs() {
         setProfile(data);
     }
 
-    useEffect(() => {
-        const audio = audioRef.current;
-        if (!audio) return;
-
-        const updateProgress = () => {
-            if (audio.duration) {
-                setProgress((audio.currentTime / audio.duration) * 100);
-                setCurrentTime(audio.currentTime);
-                setDuration(audio.duration);
-            }
-        };
-
-        const handleEnded = () => { playNext(); };
-        const handleLoadedMetadata = () => { setDuration(audio.duration); };
-
-        audio.addEventListener('timeupdate', updateProgress);
-        audio.addEventListener('ended', handleEnded);
-        audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-
-        return () => {
-            audio.removeEventListener('timeupdate', updateProgress);
-            audio.removeEventListener('ended', handleEnded);
-            audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        };
-    }, [currentSong, songs]);
-
     async function fetchSongs() {
         setLoading(true);
         const { data, error } = await supabase
@@ -107,73 +76,7 @@ function Songs() {
 
     // ===== Playback =====
     function playSong(song) {
-        if (currentSong?.id === song.id) {
-            togglePlay();
-            return;
-        }
-
-        setCurrentSong(song);
-        setIsPlaying(true);
-        setProgress(0);
-        setCurrentTime(0);
-
-        setTimeout(() => {
-            const media = song.audio_type === 'video' ? videoRef.current : audioRef.current;
-            if (media) {
-                media.src = song.audio_url;
-                media.volume = volume;
-                media.play().catch(() => { });
-            }
-        }, 50);
-    }
-
-    function togglePlay() {
-        const media = currentSong?.audio_type === 'video' ? videoRef.current : audioRef.current;
-        if (!media || !currentSong) return;
-
-        if (isPlaying) {
-            media.pause();
-        } else {
-            media.play().catch(() => { });
-        }
-        setIsPlaying(!isPlaying);
-    }
-
-    function playNext() {
-        const filteredSongs = getFilteredSongs();
-        const idx = filteredSongs.findIndex(s => s.id === currentSong?.id);
-        if (idx < filteredSongs.length - 1) playSong(filteredSongs[idx + 1]);
-        else if (filteredSongs.length > 0) playSong(filteredSongs[0]);
-    }
-
-    function playPrev() {
-        const filteredSongs = getFilteredSongs();
-        const idx = filteredSongs.findIndex(s => s.id === currentSong?.id);
-        if (idx > 0) playSong(filteredSongs[idx - 1]);
-        else if (filteredSongs.length > 0) playSong(filteredSongs[filteredSongs.length - 1]);
-    }
-
-    function handleProgressClick(e) {
-        const media = currentSong?.audio_type === 'video' ? videoRef.current : audioRef.current;
-        if (!media || !media.duration) return;
-        const bar = progressRef.current;
-        const rect = bar.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-        media.currentTime = percent * media.duration;
-    }
-
-    function handleVolumeChange(e) {
-        const v = parseFloat(e.target.value);
-        setVolume(v);
-        if (audioRef.current) audioRef.current.volume = v;
-        if (videoRef.current) videoRef.current.volume = v;
-    }
-
-    function formatTime(sec) {
-        if (!sec || isNaN(sec)) return '0:00';
-        const m = Math.floor(sec / 60);
-        const s = Math.floor(sec % 60);
-        return `${m}:${s.toString().padStart(2, '0')}`;
+        playTrack(song, songs);
     }
 
     function toggleLyrics(songId) {
@@ -213,7 +116,7 @@ function Songs() {
         try {
             const result = await uploadToCloudinary(file, isVideo ? 'video' : 'auto');
             setForm({ ...form, audio_url: result.url, audio_type: isVideo ? 'video' : 'audio' });
-            showMsg('Файл амжилттай Cloudinary руу хуулагдлаа! ☁️');
+            showMsg('Файл амжилттай хуулагдлаа! ☁️');
         } catch (error) {
             showMsg('Файл хуулахад алдаа: ' + error.message, 'error');
         } finally {
@@ -286,10 +189,6 @@ function Songs() {
             .eq('id', songId);
 
         if (!error) {
-            if (currentSong?.id === songId) {
-                setCurrentSong(null);
-                setIsPlaying(false);
-            }
             fetchSongs();
         }
     }
@@ -309,41 +208,21 @@ function Songs() {
 
     return (
         <div className="app">
-            <audio ref={audioRef} />
-            <video ref={videoRef} style={{ display: 'none' }} />
-
-            {/* Header */}
-            <header>
-                <div className="container">
-                    <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>
-                        FAITH NEWS
-                    </Link>
-                    <div className="date-bar">
+            <Header
+                user={user}
+                profile={profile}
+                dateBarInfo={
+                    <>
                         <span>🎵 Магтаал Дуу</span>
                         <span>{songs.length} дуу</span>
-                    </div>
-                    <nav>
-                        <ul className="nav-links">
-                            <li><Link to="/">🏠 Нүүр</Link></li>
-                            <li><Link to="/testimonies">Гэрчлэл</Link></li>
-                            <li><Link to="/songs" style={{ color: 'var(--accent-color)' }}>🎵 Магтаал дуу</Link></li>
-                            {user ? (
-                                <>
-                                    <li className="user-nav-item">
-                                        <span className="user-avatar-small">{(profile?.username || 'U').charAt(0).toUpperCase()}</span>
-                                        <span className="user-name-nav">{profile?.username || 'User'}</span>
-                                    </li>
-                                </>
-                            ) : (
-                                <>
-                                    <li><Link to="/login" className="btn btn-sm btn-primary">🔑 Нэвтрэх</Link></li>
-                                    <li><Link to="/register" className="btn btn-sm btn-secondary">📝 Бүртгүүлэх</Link></li>
-                                </>
-                            )}
-                        </ul>
-                    </nav>
-                </div>
-            </header>
+                        {currentTrack && (
+                            <span className="now-playing-badge">
+                                🎧 Одоо тоглож байна: {currentTrack.title}
+                            </span>
+                        )}
+                    </>
+                }
+            />
 
             <main className="container">
                 {/* Page Title */}
@@ -435,7 +314,7 @@ function Songs() {
                                     {uploading ? (
                                         <div className="upload-progress">
                                             <div className="loading-spinner" style={{ width: '32px', height: '32px' }}></div>
-                                            <p>Файл upload хийж байна...</p>
+                                            <p>Файл хуулж байна...</p>
                                         </div>
                                     ) : form.audio_url ? (
                                         <div className="upload-placeholder">
@@ -533,12 +412,12 @@ function Songs() {
                         {filteredSongs.map((song, index) => (
                             <div
                                 key={song.id}
-                                className={`song-card ${currentSong?.id === song.id ? 'song-active' : ''}`}
+                                className={`song-card ${currentTrack?.id === song.id ? 'song-active' : ''}`}
                             >
                                 <div className="song-card-main" onClick={() => playSong(song)}>
                                     {/* Track Number / Play indicator */}
                                     <div className="song-number">
-                                        {currentSong?.id === song.id && isPlaying ? (
+                                        {currentTrack?.id === song.id && isPlaying ? (
                                             <div className="song-equalizer">
                                                 <span></span><span></span><span></span>
                                             </div>
@@ -575,7 +454,7 @@ function Songs() {
                                         className="song-play-btn"
                                         onClick={(e) => { e.stopPropagation(); playSong(song); }}
                                     >
-                                        {currentSong?.id === song.id && isPlaying ? '⏸' : '▶'}
+                                        {currentTrack?.id === song.id && isPlaying ? '⏸' : '▶'}
                                     </button>
 
                                     {/* Delete (own songs or admin) */}
@@ -612,70 +491,7 @@ function Songs() {
                 )}
             </main>
 
-            {/* Bottom Player Bar */}
-            {currentSong && (
-                <div className="player-bar">
-                    <div className="player-bar-inner">
-                        {/* Song Info */}
-                        <div className="player-song-info">
-                            <div className="player-cover">
-                                {currentSong.cover_image ? (
-                                    <img src={currentSong.cover_image} alt="" />
-                                ) : (
-                                    <div className="player-cover-placeholder">
-                                        {currentSong.audio_type === 'video' ? '🎬' : '🎵'}
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <p className="player-title">{currentSong.title}</p>
-                                <p className="player-artist">{currentSong.artist}</p>
-                            </div>
-                        </div>
-
-                        {/* Controls */}
-                        <div className="player-controls">
-                            <button className="player-btn" onClick={playPrev}>⏮</button>
-                            <button className="player-btn player-btn-main" onClick={togglePlay}>
-                                {isPlaying ? '⏸' : '▶'}
-                            </button>
-                            <button className="player-btn" onClick={playNext}>⏭</button>
-                        </div>
-
-                        {/* Progress */}
-                        <div className="player-progress-section">
-                            <span className="player-time">{formatTime(currentTime)}</span>
-                            <div
-                                className="player-progress-bar"
-                                ref={progressRef}
-                                onClick={handleProgressClick}
-                            >
-                                <div
-                                    className="player-progress-fill"
-                                    style={{ width: `${progress}%` }}
-                                ></div>
-                            </div>
-                            <span className="player-time">{formatTime(duration)}</span>
-                        </div>
-
-                        {/* Volume */}
-                        <div className="player-volume">
-                            <span className="volume-icon">{volume === 0 ? '🔇' : volume < 0.5 ? '🔉' : '🔊'}</span>
-                            <input
-                                type="range"
-                                min="0"
-                                max="1"
-                                step="0.05"
-                                value={volume}
-                                onChange={handleVolumeChange}
-                                className="volume-slider"
-                            />
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            <footer style={{ marginBottom: currentSong ? '90px' : '0' }}>
+            <footer style={{ marginBottom: currentTrack ? '90px' : '0' }}>
                 <div className="container">
                     <h2 className="site-title" style={{ fontSize: '2rem' }}>FAITH NEWS</h2>
                     <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>© 2026 Христийн Мэдээ Төв. Бүх эрх хуулиар хамгаалагдсан.</p>

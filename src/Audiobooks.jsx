@@ -2,16 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 import { uploadToCloudinary } from './lib/cloudinary';
+import { usePlayer } from './context/PlayerContext';
+import Header from './components/Header';
 
 function Audiobooks() {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [currentBook, setCurrentBook] = useState(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [progress, setProgress] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [volume, setVolume] = useState(0.8);
     const [activeCategory, setActiveCategory] = useState('Бүгд');
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
@@ -20,9 +16,9 @@ function Audiobooks() {
     const [message, setMessage] = useState({ text: '', type: '' });
     const [expandedBook, setExpandedBook] = useState(null);
     const [dragActive, setDragActive] = useState(false);
-    const audioRef = useRef(null);
-    const progressRef = useRef(null);
     const fileInputRef = useRef(null);
+
+    const { currentTrack, isPlaying, playTrack, togglePlay } = usePlayer();
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
     const [form, setForm] = useState({
@@ -59,87 +55,22 @@ function Audiobooks() {
         setProfile(data);
     }
 
-    useEffect(() => {
-        const audio = audioRef.current;
-        if (!audio) return;
-        const updateProgress = () => {
-            if (audio.duration) {
-                setProgress((audio.currentTime / audio.duration) * 100);
-                setCurrentTime(audio.currentTime);
-                setDuration(audio.duration);
-            }
-        };
-        const handleEnded = () => playNext();
-        const handleLoaded = () => setDuration(audio.duration);
-        audio.addEventListener('timeupdate', updateProgress);
-        audio.addEventListener('ended', handleEnded);
-        audio.addEventListener('loadedmetadata', handleLoaded);
-        return () => {
-            audio.removeEventListener('timeupdate', updateProgress);
-            audio.removeEventListener('ended', handleEnded);
-            audio.removeEventListener('loadedmetadata', handleLoaded);
-        };
-    }, [currentBook, books]);
-
     async function fetchBooks() {
         setLoading(true);
         const { data, error } = await supabase
             .from('audiobooks')
             .select('*')
             .order('created_at', { ascending: false });
-        if (!error && data) setBooks(data);
+
+        if (!error && data) {
+            setBooks(data);
+        }
         setLoading(false);
     }
 
     // ===== Playback =====
     function playBook(book) {
-        if (currentBook?.id === book.id) { togglePlay(); return; }
-        setCurrentBook(book);
-        setIsPlaying(true);
-        setProgress(0);
-        setCurrentTime(0);
-        setTimeout(() => {
-            const audio = audioRef.current;
-            if (audio) {
-                audio.src = book.audio_url;
-                audio.volume = volume;
-                audio.play().catch(() => { });
-            }
-        }, 50);
-    }
-
-    function togglePlay() {
-        const audio = audioRef.current;
-        if (!audio || !currentBook) return;
-        if (isPlaying) audio.pause(); else audio.play().catch(() => { });
-        setIsPlaying(!isPlaying);
-    }
-
-    function playNext() {
-        const filtered = getFiltered();
-        const idx = filtered.findIndex(b => b.id === currentBook?.id);
-        if (idx < filtered.length - 1) playBook(filtered[idx + 1]);
-        else if (filtered.length > 0) playBook(filtered[0]);
-    }
-
-    function playPrev() {
-        const filtered = getFiltered();
-        const idx = filtered.findIndex(b => b.id === currentBook?.id);
-        if (idx > 0) playBook(filtered[idx - 1]);
-        else if (filtered.length > 0) playBook(filtered[filtered.length - 1]);
-    }
-
-    function handleProgressClick(e) {
-        const audio = audioRef.current;
-        if (!audio || !audio.duration) return;
-        const rect = progressRef.current.getBoundingClientRect();
-        audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
-    }
-
-    function handleVolumeChange(e) {
-        const v = parseFloat(e.target.value);
-        setVolume(v);
-        if (audioRef.current) audioRef.current.volume = v;
+        playTrack(book, books);
     }
 
     function formatTime(sec) {
@@ -174,7 +105,7 @@ function Audiobooks() {
         try {
             const result = await uploadToCloudinary(file, 'auto');
             setForm({ ...form, audio_url: result.url });
-            showMsg('Файл амжилттай Cloudinary руу хуулагдлаа! ☁️');
+            showMsg('Файл амжилттай хуулагдлаа! ☁️');
         } catch (error) {
             showMsg('Файл хуулахад алдаа: ' + error.message, 'error');
         } finally {
@@ -226,7 +157,6 @@ function Audiobooks() {
     async function handleDelete(bookId) {
         if (!window.confirm('Энэ номыг устгах уу?')) return;
         await supabase.from('audiobooks').delete().eq('id', bookId);
-        if (currentBook?.id === bookId) { setCurrentBook(null); setIsPlaying(false); }
         fetchBooks();
     }
 
@@ -245,36 +175,22 @@ function Audiobooks() {
 
     return (
         <div className="app">
-            <audio ref={audioRef} />
 
-            <header>
-                <div className="container">
-                    <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>FAITH NEWS</Link>
-                    <div className="date-bar">
+            <Header
+                user={user}
+                profile={profile}
+                dateBarInfo={
+                    <>
                         <span>📚 Сонсдог Ном</span>
                         <span>{books.length} ном</span>
-                    </div>
-                    <nav>
-                        <ul className="nav-links">
-                            <li><Link to="/">🏠 Нүүр</Link></li>
-                            <li><Link to="/testimonies">Гэрчлэл</Link></li>
-                            <li><Link to="/songs">🎵 Магтаал дуу</Link></li>
-                            <li><Link to="/audiobooks" style={{ color: 'var(--accent-color)' }}>📚 Сонсдог ном</Link></li>
-                            {user ? (
-                                <li className="user-nav-item">
-                                    <span className="user-avatar-small">{(profile?.username || 'U').charAt(0).toUpperCase()}</span>
-                                    <span className="user-name-nav">{profile?.username || 'User'}</span>
-                                </li>
-                            ) : (
-                                <>
-                                    <li><Link to="/login" className="btn btn-sm btn-primary">🔑 Нэвтрэх</Link></li>
-                                    <li><Link to="/register" className="btn btn-sm btn-secondary">📝 Бүртгүүлэх</Link></li>
-                                </>
-                            )}
-                        </ul>
-                    </nav>
-                </div>
-            </header>
+                        {currentTrack && (
+                            <span className="now-playing-badge">
+                                🎧 Одоо сонсож байна: {currentTrack.title}
+                            </span>
+                        )}
+                    </>
+                }
+            />
 
             <main className="container">
                 {/* Hero */}
@@ -333,7 +249,7 @@ function Audiobooks() {
                                     {uploading ? (
                                         <div className="upload-progress">
                                             <div className="loading-spinner" style={{ width: '32px', height: '32px' }}></div>
-                                            <p>Upload хийж байна...</p>
+                                            <p>Хуулж байна...</p>
                                         </div>
                                     ) : form.audio_url ? (
                                         <div className="upload-placeholder">
@@ -396,7 +312,7 @@ function Audiobooks() {
                 ) : (
                     <div className="audiobook-grid">
                         {filtered.map(book => (
-                            <div key={book.id} className={`audiobook-card ${currentBook?.id === book.id ? 'audiobook-active' : ''}`}>
+                            <div key={book.id} className={`audiobook-card ${currentTrack?.id === book.id ? 'audiobook-active' : ''}`}>
                                 {/* Cover */}
                                 <div className="audiobook-cover" onClick={() => playBook(book)}>
                                     {book.cover_image ? (
@@ -407,9 +323,9 @@ function Audiobooks() {
                                         </div>
                                     )}
                                     <div className="audiobook-play-overlay">
-                                        {currentBook?.id === book.id && isPlaying ? '⏸' : '▶'}
+                                        {currentTrack?.id === book.id && isPlaying ? '⏸' : '▶'}
                                     </div>
-                                    {currentBook?.id === book.id && isPlaying && (
+                                    {currentTrack?.id === book.id && isPlaying && (
                                         <div className="audiobook-playing-badge">
                                             <div className="song-equalizer"><span></span><span></span><span></span></div>
                                         </div>
@@ -442,7 +358,7 @@ function Audiobooks() {
 
                                     <div className="audiobook-actions">
                                         <button className="btn btn-sm btn-primary" onClick={() => playBook(book)}>
-                                            {currentBook?.id === book.id && isPlaying ? '⏸ Зогсоох' : '▶ Сонсох'}
+                                            {currentTrack?.id === book.id && isPlaying ? '⏸ Зогсоох' : '▶ Сонсох'}
                                         </button>
                                         {user && (book.user_id === user.id || isAdmin) && (
                                             <button className="btn btn-sm btn-danger" onClick={() => handleDelete(book.id)}>🗑️</button>
@@ -455,47 +371,7 @@ function Audiobooks() {
                 )}
             </main>
 
-            {/* Player Bar */}
-            {currentBook && (
-                <div className="player-bar">
-                    <div className="player-bar-inner">
-                        <div className="player-song-info">
-                            <div className="player-cover">
-                                {currentBook.cover_image ? (
-                                    <img src={currentBook.cover_image} alt="" />
-                                ) : (
-                                    <div className="player-cover-placeholder">📖</div>
-                                )}
-                            </div>
-                            <div>
-                                <p className="player-title">{currentBook.title}</p>
-                                <p className="player-artist">{currentBook.author}</p>
-                            </div>
-                        </div>
-                        <div className="player-controls">
-                            <button className="player-btn" onClick={playPrev}>⏮</button>
-                            <button className="player-btn player-btn-main" onClick={togglePlay}>
-                                {isPlaying ? '⏸' : '▶'}
-                            </button>
-                            <button className="player-btn" onClick={playNext}>⏭</button>
-                        </div>
-                        <div className="player-progress-section">
-                            <span className="player-time">{formatTime(currentTime)}</span>
-                            <div className="player-progress-bar" ref={progressRef} onClick={handleProgressClick}>
-                                <div className="player-progress-fill" style={{ width: `${progress}%` }}></div>
-                            </div>
-                            <span className="player-time">{formatTime(duration)}</span>
-                        </div>
-                        <div className="player-volume">
-                            <span className="volume-icon">{volume === 0 ? '🔇' : volume < 0.5 ? '🔉' : '🔊'}</span>
-                            <input type="range" min="0" max="1" step="0.05" value={volume}
-                                onChange={handleVolumeChange} className="volume-slider" />
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            <footer style={{ marginBottom: currentBook ? '90px' : '0' }}>
+            <footer style={{ marginBottom: currentTrack ? '90px' : '0' }}>
                 <div className="container">
                     <h2 className="site-title" style={{ fontSize: '2rem' }}>FAITH NEWS</h2>
                     <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>© 2026 Христийн Мэдээ Төв.</p>

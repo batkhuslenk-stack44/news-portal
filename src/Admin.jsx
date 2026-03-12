@@ -102,7 +102,7 @@ function Admin() {
         try {
             const result = await uploadToCloudinary(file, 'image');
             setForm({ ...form, image: result.url });
-            showMessage('Зураг амжилттай Cloudinary руу хуулагдлаа! ☁️');
+            showMessage('Зураг амжилттай хуулагдлаа! ☁️');
         } catch (error) {
             showMessage('Зураг хуулахад алдаа: ' + error.message, 'error');
         } finally {
@@ -316,7 +316,7 @@ function Admin() {
                                         className={`toggle-btn ${imageMode === 'upload' ? 'active' : ''}`}
                                         onClick={() => setImageMode('upload')}
                                     >
-                                        📤 Upload хийх
+                                        📤 Зураг хуулах
                                     </button>
                                     <button
                                         type="button"
@@ -346,7 +346,7 @@ function Admin() {
                                         {uploading ? (
                                             <div className="upload-progress">
                                                 <div className="loading-spinner" style={{ width: '32px', height: '32px' }}></div>
-                                                <p>Зураг upload хийж байна...</p>
+                                                <p>Зураг хуулж байна...</p>
                                             </div>
                                         ) : (
                                             <div className="upload-placeholder">

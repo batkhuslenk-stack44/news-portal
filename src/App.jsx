@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabase';
+import Header from './components/Header';
 
 function App() {
   const [news, setNews] = useState([]);
@@ -98,43 +99,7 @@ function App() {
 
   return (
     <div className="app">
-      <header>
-        <div className="container">
-          <h1 className="site-title">FAITH NEWS</h1>
-          <div className="date-bar">
-            <span>{currentDate}</span>
-            <span>Хувилбар LXXIV — Дугаар 256</span>
-            <span>Монгол Улс, Улаанбаатар</span>
-          </div>
-          <nav>
-            <ul className="nav-links">
-              <li><a href="#">Сүм чуулган</a></li>
-              <li><a href="#">Библи судлал</a></li>
-              <li><Link to="/testimonies">Гэрчлэл</Link></li>
-              <li><a href="#">Залбирал</a></li>
-              <li><a href="#">Гэр бүл</a></li>
-              <li><a href="#">Номлол</a></li>
-              <li><Link to="/songs">🎵 Магтаал дуу</Link></li>
-              <li><Link to="/audiobooks">📚 Сонсдог ном</Link></li>
-              <li><Link to="/admin" className="admin-link">Админ</Link></li>
-              {user ? (
-                <>
-                  <li className="user-nav-item">
-                    <span className="user-avatar-small">{(profile?.username || 'U').charAt(0).toUpperCase()}</span>
-                    <span className="user-name-nav">{profile?.username || 'User'}</span>
-                  </li>
-                  <li><button onClick={handleLogout} className="btn btn-sm btn-secondary nav-logout-btn">Гарах</button></li>
-                </>
-              ) : (
-                <>
-                  <li><Link to="/login" className="btn btn-sm btn-primary">🔑 Нэвтрэх</Link></li>
-                  <li><Link to="/register" className="btn btn-sm btn-secondary">📝 Бүртгүүлэх</Link></li>
-                </>
-              )}
-            </ul>
-          </nav>
-        </div>
-      </header>
+      <Header user={user} profile={profile} handleLogout={handleLogout} />
 
       <main className="container">
         {news.length === 0 ? (
@@ -209,7 +174,7 @@ function App() {
           </ul>
         </div>
       </footer>
-    </div>
+    </div >
   );
 }
 

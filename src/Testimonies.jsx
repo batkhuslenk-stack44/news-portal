@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabase';
+import Header from './components/Header';
+import { uploadToCloudinary } from './lib/cloudinary';
 
 function Testimonies() {
     const [testimonies, setTestimonies] = useState([]);
@@ -135,7 +137,7 @@ function Testimonies() {
         return date.toLocaleDateString('mn-MN', { year: 'numeric', month: 'long', day: 'numeric' });
     }
 
-    // ===== File Upload =====
+    // ===== File Upload (Cloudinary) =====
     async function handleFileUpload(file, type) {
         if (!file) return null;
 
@@ -143,10 +145,6 @@ function Testimonies() {
             const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             if (!allowedTypes.includes(file.type)) {
                 showMessage('Зөвхөн JPG, PNG, GIF, WEBP зураг оруулна уу!', 'error');
-                return null;
-            }
-            if (file.size > 5 * 1024 * 1024) {
-                showMessage('Зурагны хэмжээ 5MB-аас бага байх ёстой!', 'error');
                 return null;
             }
         }
@@ -157,32 +155,18 @@ function Testimonies() {
                 showMessage('Зөвхөн MP4, WEBM, MOV бичлэг оруулна уу!', 'error');
                 return null;
             }
-            if (file.size > 100 * 1024 * 1024) {
-                showMessage('Бичлэгийн хэмжээ 100MB-аас бага байх ёстой!', 'error');
-                return null;
-            }
         }
 
         setUploading(true);
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${type}-${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-
-        const { data, error } = await supabase.storage
-            .from('news-images')
-            .upload(fileName, file);
-
-        if (error) {
-            showMessage(`${type === 'image' ? 'Зураг' : 'Бичлэг'} upload хийхэд алдаа: ` + error.message, 'error');
+        try {
+            const result = await uploadToCloudinary(file, type === 'video' ? 'video' : 'auto');
+            setUploading(false);
+            return result.url;
+        } catch (error) {
+            showMessage(`${type === 'image' ? 'Зураг' : 'Бичлэг'} хуулахад алдаа: ` + error.message, 'error');
             setUploading(false);
             return null;
         }
-
-        const { data: { publicUrl } } = supabase.storage
-            .from('news-images')
-            .getPublicUrl(fileName);
-
-        setUploading(false);
-        return publicUrl;
     }
 
     async function handleImageSelect(e) {
@@ -191,18 +175,18 @@ function Testimonies() {
         const url = await handleFileUpload(file, 'image');
         if (url) {
             setForm(prev => ({ ...prev, image_url: url }));
-            showMessage('Зураг амжилттай upload хийгдлээ! 📸');
+            showMessage('Зураг амжилттай хуулагдлаа! 📸');
         }
     }
 
     async function handleVideoSelect(e) {
         const file = e.target.files[0];
         if (!file) return;
-        showMessage('Бичлэг upload хийж байна... Түр хүлээнэ үү 🎬');
+        showMessage('Бичлэг хуулж байна... Түр хүлээнэ үү 🎬');
         const url = await handleFileUpload(file, 'video');
         if (url) {
             setForm(prev => ({ ...prev, video_url: url }));
-            showMessage('Бичлэг амжилттай upload хийгдлээ! 🎬');
+            showMessage('Бичлэг амжилттай хуулагдлаа! 🎬');
         }
     }
 
@@ -292,7 +276,7 @@ function Testimonies() {
         const content = (commentInputs[testimonyId] || '').trim();
         if (!content) return;
         if (!user) {
-            showMessage('Comment бичихийн тулд нэвтэрнэ үү!', 'error');
+            showMessage('Сэтгэгдэл бичихийн тулд нэвтэрнэ үү!', 'error');
             return;
         }
 
@@ -310,7 +294,7 @@ function Testimonies() {
             .select();
 
         if (error) {
-            showMessage('Comment нэмэхэд алдаа: ' + error.message, 'error');
+            showMessage('Сэтгэгдэл нэмэхэд алдаа: ' + error.message, 'error');
         } else {
             setCommentInputs(prev => ({ ...prev, [testimonyId]: '' }));
             setComments(prev => ({
@@ -378,28 +362,15 @@ function Testimonies() {
 
     return (
         <div className="app">
-            {/* Header */}
-            <header>
-                <div className="container">
-                    <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>ИТГЭЛИЙН ЗАМ</Link>
-                    <nav>
-                        <ul className="nav-links">
-                            <li><Link to="/">← Нүүр</Link></li>
-                            {user ? (
-                                <li>
-                                    <span className="user-avatar-small">{(profile?.username || 'U').charAt(0).toUpperCase()}</span>
-                                    <span className="user-name-nav" style={{ marginLeft: '0.3rem' }}>{profile?.username || 'User'}</span>
-                                </li>
-                            ) : (
-                                <>
-                                    <li><Link to="/login" className="btn btn-sm btn-primary">🔑 Нэвтрэх</Link></li>
-                                    <li><Link to="/register" className="btn btn-sm btn-secondary">📝 Бүртгүүлэх</Link></li>
-                                </>
-                            )}
-                        </ul>
-                    </nav>
-                </div>
-            </header>
+            <Header
+                user={user}
+                profile={profile}
+                dateBarInfo={
+                    <div className="date-bar">
+                        <span>📖 Итгэлийн Гэрчлэл</span>
+                    </div>
+                }
+            />
 
             <main className="feed-container">
                 {/* Page Title */}

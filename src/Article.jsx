@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { supabase } from './lib/supabase';
+import Header from './components/Header';
 
 function Article() {
     const { id } = useParams();
@@ -136,7 +137,7 @@ function Article() {
             {/* Header */}
             <header>
                 <div className="container">
-                    <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>ИТГЭЛИЙН ЗАМ</Link>
+                    <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>FAITH NEWS</Link>
                     <nav>
                         <ul className="nav-links">
                             <li><Link to="/">← Нүүр хуудас</Link></li>
@@ -233,7 +234,7 @@ function Article() {
 
             <footer>
                 <div className="container">
-                    <h2 className="site-title" style={{ fontSize: '2rem' }}>ИТГЭЛИЙН ЗАМ</h2>
+                    <h2 className="site-title" style={{ fontSize: '2rem' }}>FAITH NEWS</h2>
                     <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>© 2026 Христийн Мэдээ Төв. Бүх эрх хуулиар хамгаалагдсан.</p>
                 </div>
             </footer>
