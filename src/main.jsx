@@ -15,6 +15,7 @@ import Prayers from './Prayers.jsx'
 import { PlayerProvider } from './context/PlayerContext'
 import { ThemeProvider } from './context/ThemeContext'
 import GlobalPlayer from './components/GlobalPlayer'
+import BottomNav from './components/BottomNav'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -34,9 +35,18 @@ createRoot(document.getElementById('root')).render(
             <Route path="/audiobooks" element={<Audiobooks />} />
             <Route path="/reset-password" element={<Auth />} />
           </Routes>
+          <BottomNav />
           <GlobalPlayer />
         </PlayerProvider>
       </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,
 )
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/news-portal/sw.js')
+      .then(reg => console.log('SW Registered', reg))
+      .catch(err => console.log('SW Failed', err));
+  });
+}

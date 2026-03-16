@@ -2744,3 +2744,114 @@ footer {
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+/* ===== Mobile Navigation & App Look ===== */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: var(--card-bg);
+  backdrop-filter: blur(15px);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+  padding: 0 10px;
+}
+
+.bottom-nav .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.bottom-nav .nav-icon {
+  font-size: 1.5rem;
+  transition: transform 0.2s;
+}
+
+.bottom-nav .nav-item.active {
+  color: var(--accent-color);
+}
+
+.bottom-nav .nav-item.active .nav-icon {
+  transform: translateY(-4px);
+}
+
+.bottom-nav .nav-label {
+  letter-spacing: 0.2px;
+}
+
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block !important;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .bottom-nav {
+    display: flex;
+  }
+
+  body {
+    padding-bottom: 80px;
+    /* Space for bottom nav */
+  }
+
+  header {
+    padding: 1.5rem 0;
+    margin-bottom: 1rem;
+  }
+
+  .site-title {
+    font-size: 2rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .date-bar {
+    font-size: 0.7rem;
+    padding: 0.4rem 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .bottom-nav {
+    display: none;
+  }
+}
+
+/* Glassmorphism enhancements */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+.dark-mode .glass-effect {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}

@@ -25,7 +25,7 @@ function Header({ user, profile, handleLogout, dateBarInfo }) {
                         </>
                     )}
                 </div>
-                <nav>
+                <nav className="desktop-only">
                     <ul className="nav-links">
                         <li><Link to="/churches">Сүм чуулган</Link></li>
                         <li><Link to="/testimonies">Гэрчлэл</Link></li>
@@ -52,6 +52,9 @@ function Header({ user, profile, handleLogout, dateBarInfo }) {
                         <li><ThemeSwitcher /></li>
                     </ul>
                 </nav>
+                <div className="mobile-only" style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+                    <ThemeSwitcher />
+                </div>
             </div>
         </header>
     );
