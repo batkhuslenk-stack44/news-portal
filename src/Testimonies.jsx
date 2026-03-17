@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from './lib/supabase';
+import { supabase, supabaseAdmin } from './lib/supabase';
 import Header from './components/Header';
 import TestimonyCreateForm from './components/testimonies/TestimonyCreateForm';
 import TestimonyCard from './components/testimonies/TestimonyCard';
@@ -159,7 +159,8 @@ function Testimonies() {
     }
 
     async function handleDeleteComment(commentId, testimonyId) {
-        const { error } = await supabase.from('testimony_comments').delete().eq('id', commentId);
+        const client = isAdmin ? supabaseAdmin : supabase;
+        const { error } = await client.from('testimony_comments').delete().eq('id', commentId);
         if (!error) {
             setComments(prev => ({ ...prev, [testimonyId]: (prev[testimonyId] || []).filter(c => c.id !== commentId) }));
             setTestimonies(prev => prev.map(t => t.id === testimonyId ? { ...t, commentCount: Math.max(0, (t.commentCount || 0) - 1) } : t));
@@ -168,7 +169,8 @@ function Testimonies() {
 
     async function handleDelete(id) {
         if (!window.confirm('Энэ постыг устгах уу?')) return;
-        const { error } = await supabase.from('testimonies').delete().eq('id', id);
+        const client = isAdmin ? supabaseAdmin : supabase;
+        const { error } = await client.from('testimonies').delete().eq('id', id);
         if (error) {
             showMessage('Устгахад алдаа: ' + error.message, 'error');
         } else {

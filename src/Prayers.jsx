@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from './lib/supabase';
+import { supabase, supabaseAdmin } from './lib/supabase';
 import Header from './components/Header';
 import PrayerCreateForm from './components/prayers/PrayerCreateForm';
 import PrayerCard from './components/prayers/PrayerCard';
@@ -164,7 +164,8 @@ function Prayers() {
     }
 
     async function handleDeleteComment(commentId, prayerId) {
-        const { error } = await supabase.from('prayer_comments').delete().eq('id', commentId);
+        const client = isAdmin ? supabaseAdmin : supabase;
+        const { error } = await client.from('prayer_comments').delete().eq('id', commentId);
         if (!error) {
             setComments(prev => ({ ...prev, [prayerId]: (prev[prayerId] || []).filter(c => c.id !== commentId) }));
             setPrayers(prev => prev.map(p => p.id === prayerId ? { ...p, commentCount: Math.max(0, (p.commentCount || 0) - 1) } : p));
@@ -173,7 +174,8 @@ function Prayers() {
 
     async function handleDelete(id) {
         if (!window.confirm('Энэ постыг устгах уу?')) return;
-        const { error } = await supabase.from('prayers').delete().eq('id', id);
+        const client = isAdmin ? supabaseAdmin : supabase;
+        const { error } = await client.from('prayers').delete().eq('id', id);
         if (error) {
             showMessage('Устгахад алдаа: ' + error.message, 'error');
         } else {
