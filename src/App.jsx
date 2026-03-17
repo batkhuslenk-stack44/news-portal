@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 import Header from './components/Header';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [news, setNews] = useState([]);
@@ -174,6 +176,7 @@ function App() {
           </ul>
         </div>
       </footer>
+      <ToastContainer position="bottom-right" theme="dark" />
     </div >
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from './lib/supabase';
+import { toast } from 'react-toastify';
 
 function Auth() {
     const navigate = useNavigate();
@@ -13,7 +14,6 @@ function Auth() {
     const [newPassword, setNewPassword] = useState('');
     const [username, setUsername] = useState('');
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState({ text: '', type: '' });
     const [showForgot, setShowForgot] = useState(false);
     const [isRecoveryMode, setIsRecoveryMode] = useState(false);
 
@@ -29,8 +29,8 @@ function Auth() {
     }, []);
 
     function showMessage(text, type = 'success') {
-        setMessage({ text, type });
-        setTimeout(() => setMessage({ text: '', type: '' }), 7000);
+        if (type === 'error') toast.error(text);
+        else toast.success(text);
     }
 
     async function handleLogin(e) {
@@ -149,10 +149,6 @@ function Auth() {
                         <h1 className="serif">🔒 Шинэ нууц үг</h1>
                         <p className="auth-subtitle">Шинэ нууц үгээ оруулна уу</p>
 
-                        {message.text && (
-                            <div className={`message message-${message.type}`}>{message.text}</div>
-                        )}
-
                         <form onSubmit={handleUpdatePassword}>
                             <div className="form-group">
                                 <label>Шинэ нууц үг</label>
@@ -189,10 +185,6 @@ function Auth() {
 
                         <h1 className="serif">🔄 Нууц үг сэргээх</h1>
                         <p className="auth-subtitle">Бүртгэлтэй имэйл хаягаа оруулна уу</p>
-
-                        {message.text && (
-                            <div className={`message message-${message.type}`}>{message.text}</div>
-                        )}
 
                         <form onSubmit={handleForgotPassword}>
                             <div className="form-group">
@@ -245,10 +237,6 @@ function Auth() {
                             ? 'Имэйл, нууц үгээ оруулна уу'
                             : 'Шинэ хаяг үүсгэх'}
                     </p>
-
-                    {message.text && (
-                        <div className={`message message-${message.type}`}>{message.text}</div>
-                    )}
 
                     <form onSubmit={isLogin ? handleLogin : handleRegister}>
                         {!isLogin && (

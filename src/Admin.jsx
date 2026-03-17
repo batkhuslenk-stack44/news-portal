@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 import { uploadToCloudinary } from './lib/cloudinary';
+import { toast } from 'react-toastify';
 
 const ADMIN_PASSWORD = 'itgel2026';
 
@@ -10,7 +11,6 @@ function Admin() {
     const [password, setPassword] = useState('');
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState({ text: '', type: '' });
     const [editingId, setEditingId] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [imageMode, setImageMode] = useState('upload'); // 'upload' or 'url'
@@ -46,8 +46,8 @@ function Admin() {
     }
 
     function showMessage(text, type = 'success') {
-        setMessage({ text, type });
-        setTimeout(() => setMessage({ text: '', type: '' }), 4000);
+        if (type === 'error') toast.error(text);
+        else toast.success(text);
     }
 
     function handleLogin(e) {
@@ -223,9 +223,6 @@ function Admin() {
                             />
                             <button type="submit" className="btn btn-primary btn-full">Нэвтрэх</button>
                         </form>
-                        {message.text && (
-                            <div className={`message message-${message.type}`}>{message.text}</div>
-                        )}
                         <Link to="/" className="back-link">← Нүүр хуудас руу буцах</Link>
                     </div>
                 </div>
@@ -246,10 +243,6 @@ function Admin() {
                         </div>
                     </div>
                 </header>
-
-                {message.text && (
-                    <div className={`message message-${message.type}`}>{message.text}</div>
-                )}
 
                 {/* Form */}
                 <div className="container" style={{ marginTop: '2rem' }}>
