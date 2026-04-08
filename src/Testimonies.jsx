@@ -5,6 +5,7 @@ import Header from './components/Header';
 import TestimonyCreateForm from './components/testimonies/TestimonyCreateForm';
 import TestimonyCard from './components/testimonies/TestimonyCard';
 import { toast } from 'react-toastify';
+import ConfirmModal from './components/ConfirmModal';
 
 function Testimonies() {
     const [testimonies, setTestimonies] = useState([]);
@@ -19,6 +20,8 @@ function Testimonies() {
     const [expandedComments, setExpandedComments] = useState(new Set());
     const [commentLoading, setCommentLoading] = useState({});
     const [activeMenu, setActiveMenu] = useState(null);
+    const [deletingId, setDeletingId] = useState(null);
+    const [deletingComment, setDeletingComment] = useState(null);
 
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
@@ -158,7 +161,15 @@ function Testimonies() {
         setCommentLoading(prev => ({ ...prev, [testimonyId]: false }));
     }
 
-    async function handleDeleteComment(commentId, testimonyId) {
+    function handleDeleteCommentClick(commentId, testimonyId) {
+        setDeletingComment({ commentId, testimonyId });
+    }
+
+    async function confirmDeleteComment() {
+        if (!deletingComment) return;
+        const { commentId, testimonyId } = deletingComment;
+        setDeletingComment(null);
+
         const client = isAdmin ? supabaseAdmin : supabase;
         const { error } = await client.from('testimony_comments').delete().eq('id', commentId);
         if (!error) {
@@ -167,8 +178,15 @@ function Testimonies() {
         }
     }
 
-    async function handleDelete(id) {
-        if (!window.confirm('Энэ постыг устгах уу?')) return;
+    function handleDeleteClick(id) {
+        setDeletingId(id);
+    }
+
+    async function confirmDelete() {
+        if (!deletingId) return;
+        const id = deletingId;
+        setDeletingId(null);
+        
         const client = isAdmin ? supabaseAdmin : supabase;
         const { error } = await client.from('testimonies').delete().eq('id', id);
         if (error) {
@@ -237,7 +255,7 @@ function Testimonies() {
                                 isAdmin={isAdmin}
                                 activeMenu={activeMenu}
                                 setActiveMenu={setActiveMenu}
-                                onDelete={handleDelete}
+                                onDelete={handleDeleteClick}
                                 isLiked={userLikes.has(t.id)}
                                 onLike={handleLike}
                                 expandedComments={expandedComments}
@@ -247,7 +265,7 @@ function Testimonies() {
                                 onCommentInputChange={(id, val) => setCommentInputs(prev => ({ ...prev, [id]: val }))}
                                 onCommentSubmit={handleCommentSubmit}
                                 commentLoading={commentLoading[t.id]}
-                                onDeleteComment={handleDeleteComment}
+                                onDeleteComment={handleDeleteCommentClick}
                                 showMessage={showMessage}
                             />
                         ))}
@@ -261,6 +279,20 @@ function Testimonies() {
                     <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>© 2026 Христийн Мэдээ Төв. Бүх эрх хуулиар хамгаалагдсан.</p>
                 </div>
             </footer>
+            
+            <ConfirmModal 
+                isOpen={!!deletingId} 
+                message="Энэ постыг устгах уу?" 
+                onConfirm={confirmDelete} 
+                onCancel={() => setDeletingId(null)} 
+            />
+            
+            <ConfirmModal 
+                isOpen={!!deletingComment} 
+                message="Энэ сэтгэгдлийг устгах уу?" 
+                onConfirm={confirmDeleteComment} 
+                onCancel={() => setDeletingComment(null)} 
+            />
         </div>
     );
 }

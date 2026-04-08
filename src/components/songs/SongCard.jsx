@@ -12,6 +12,27 @@ function SongCard({
     lyricsOpen,
     toggleLyrics
 }) {
+    const handleDownload = async (e, song) => {
+        e.stopPropagation();
+        try {
+            const response = await fetch(song.audio_url);
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            const extension = song.audio_type === 'video' ? 'mp4' : 'mp3';
+            link.download = `${song.artist || 'Дуу'} - ${song.title || 'Татах'}.${extension}`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            console.error('Download failed', error);
+            window.open(song.audio_url, '_blank');
+        }
+    };
+
     return (
         <div className={`song-card ${currentTrack?.id === song.id ? 'song-active' : ''}`}>
             <div className="song-card-main" onClick={() => playSong(song)}>
@@ -56,6 +77,18 @@ function SongCard({
                 >
                     {currentTrack?.id === song.id && isPlaying ? '⏸' : '▶'}
                 </button>
+
+                {/* Download Button */}
+                {song.audio_url && (
+                    <button
+                        className="song-download-btn"
+                        onClick={(e) => handleDownload(e, song)}
+                        title="Татах"
+                        style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '1.2rem', padding: '0.2rem' }}
+                    >
+                        ⬇️
+                    </button>
+                )}
 
                 {/* Delete (own songs or admin) */}
                 {(isAdmin || (user && song.user_id === user.id)) && (

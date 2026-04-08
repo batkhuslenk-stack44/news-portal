@@ -38,7 +38,7 @@ function ChurchForm({ initialData, onSubmit, onCancel, isSubmitting }) {
     return (
         <form onSubmit={handleSubmit} className="admin-form">
             <div className="form-group">
-                <label>Чуулганы нэр</label>
+                <label>Арга хэмжээ / Цугларалтын нэр</label>
                 <input type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required />
             </div>
             <div className="form-group">
@@ -47,7 +47,7 @@ function ChurchForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             </div>
             <div className="form-grid">
                 <div className="form-group">
-                    <label>Гишүүдийн тоо</label>
+                    <label>Оролцох хүний тоо (багцаагаар)</label>
                     <input type="number" value={formData.members_count || ''} onChange={e => setFormData({ ...formData, members_count: parseInt(e.target.value) || 0 })} />
                 </div>
                 <div className="form-group">
@@ -56,8 +56,8 @@ function ChurchForm({ initialData, onSubmit, onCancel, isSubmitting }) {
                 </div>
             </div>
             <div className="form-group">
-                <label>Үйл ажиллагаа (Таслалаар тусгаарлах)</label>
-                <input type="text" value={formData.activities} onChange={e => setFormData({ ...formData, activities: e.target.value })} placeholder="Залбирал, Хүүхдийн хичээл..." required />
+                <label>Төрөл (Таслалаар тусгаарлах)</label>
+                <input type="text" value={formData.activities} onChange={e => setFormData({ ...formData, activities: e.target.value })} placeholder="Конференц, Залбирлын цугларалт, Семинар..." required />
             </div>
             <div className="form-group">
                 <label>Google Maps URL (Заавал биш)</label>

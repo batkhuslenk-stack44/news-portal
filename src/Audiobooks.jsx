@@ -6,6 +6,7 @@ import Header from './components/Header';
 import AudiobookUploadForm from './components/audiobooks/AudiobookUploadForm';
 import AudiobookCard from './components/audiobooks/AudiobookCard';
 import { toast } from 'react-toastify';
+import ConfirmModal from './components/ConfirmModal';
 
 function Audiobooks() {
     const [books, setBooks] = useState([]);
@@ -15,6 +16,7 @@ function Audiobooks() {
     const [profile, setProfile] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [expandedBook, setExpandedBook] = useState(null);
+    const [deletingId, setDeletingId] = useState(null);
 
     const { currentTrack, isPlaying, playTrack } = usePlayer();
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
@@ -90,8 +92,14 @@ function Audiobooks() {
         }
     }
 
-    async function handleDelete(bookId) {
-        if (!window.confirm('Энэ номыг устгах уу?')) return;
+    function handleDelete(bookId) {
+        setDeletingId(bookId);
+    }
+
+    async function confirmDelete() {
+        if (!deletingId) return;
+        const bookId = deletingId;
+        setDeletingId(null);
 
         const client = isAdmin ? supabaseAdmin : supabase;
         const { error } = await client.from('audiobooks').delete().eq('id', bookId);
@@ -205,6 +213,13 @@ function Audiobooks() {
                     </ul>
                 </div>
             </footer>
+            
+            <ConfirmModal 
+                isOpen={!!deletingId} 
+                message="Энэ номыг устгах уу?" 
+                onConfirm={confirmDelete} 
+                onCancel={() => setDeletingId(null)} 
+            />
         </div>
     );
 }

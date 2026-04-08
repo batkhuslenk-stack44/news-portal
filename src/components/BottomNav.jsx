@@ -21,8 +21,8 @@ function BottomNav() {
                 <span className="nav-label">Гэрчлэл</span>
             </NavLink>
             <NavLink to="/churches" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
-                <span className="nav-icon">⛪</span>
-                <span className="nav-label">Сүм</span>
+                <span className="nav-icon">🤝</span>
+                <span className="nav-label">Цугларалт</span>
             </NavLink>
         </nav>
     );

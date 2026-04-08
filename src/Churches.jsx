@@ -93,7 +93,7 @@ function Churches() {
             if (error) throw error;
             setChurches([data[0], ...churches]);
             setShowRegForm(false);
-            toast.success('Сүм амжилттай бүртгэгдлээ! ⛪');
+            toast.success('Цугларалт амжилттай бүртгэгдлээ! 🤝');
         } catch (err) {
             toast.error(err.message);
         } finally {
@@ -151,7 +151,7 @@ function Churches() {
                     setUser(null);
                     setProfile(null);
                 }}
-                dateBarInfo={<span>💒 Сүм чуулган</span>}
+                dateBarInfo={<span>🤝 Цугларалт, арга хэмжээ</span>}
             />
 
             <main className="container">
@@ -166,7 +166,7 @@ function Churches() {
 
                 {showRegForm && (
                     <section className="admin-form-container glass">
-                        <h2 className="serif">Сүм бүртгүүлэх</h2>
+                        <h2 className="serif">Цугларалт, арга хэмжээ бүртгүүлэх</h2>
                         <ChurchForm 
                             onSubmit={handleRegister} 
                             onCancel={() => setShowRegForm(false)} 
@@ -218,7 +218,7 @@ function Churches() {
 
             <footer>
                 <div className="container">
-                    <p>© 2026 FAITH NEWS. Сүм чуулганы нэгдсэн мэдээллийн сан.</p>
+                    <p>© 2026 FAITH NEWS. Цугларалт, арга хэмжээний мэдээлэл.</p>
                 </div>
             </footer>
         </div>

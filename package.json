@@ -9,6 +9,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "build": "vite build",
+    "postbuild": "node -e \"require('fs').copyFileSync('dist/index.html', 'dist/404.html')\"",
     "lint": "eslint .",
     "preview": "vite preview"
   },

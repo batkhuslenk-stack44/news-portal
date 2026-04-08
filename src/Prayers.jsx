@@ -5,6 +5,7 @@ import Header from './components/Header';
 import PrayerCreateForm from './components/prayers/PrayerCreateForm';
 import PrayerCard from './components/prayers/PrayerCard';
 import { toast } from 'react-toastify';
+import ConfirmModal from './components/ConfirmModal';
 
 function Prayers() {
     const [prayers, setPrayers] = useState([]);
@@ -17,6 +18,8 @@ function Prayers() {
     const [comments, setComments] = useState({});
     const [commentInputs, setCommentInputs] = useState({});
     const [expandedComments, setExpandedComments] = useState(new Set());
+    const [deletingId, setDeletingId] = useState(null);
+    const [deletingComment, setDeletingComment] = useState(null);
 
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
@@ -163,7 +166,15 @@ function Prayers() {
         }
     }
 
-    async function handleDeleteComment(commentId, prayerId) {
+    function handleDeleteCommentClick(commentId, prayerId) {
+        setDeletingComment({ commentId, prayerId });
+    }
+
+    async function confirmDeleteComment() {
+        if (!deletingComment) return;
+        const { commentId, prayerId } = deletingComment;
+        setDeletingComment(null);
+
         const client = isAdmin ? supabaseAdmin : supabase;
         const { error } = await client.from('prayer_comments').delete().eq('id', commentId);
         if (!error) {
@@ -172,8 +183,15 @@ function Prayers() {
         }
     }
 
-    async function handleDelete(id) {
-        if (!window.confirm('Энэ постыг устгах уу?')) return;
+    function handleDelete(id) {
+        setDeletingId(id);
+    }
+
+    async function confirmDelete() {
+        if (!deletingId) return;
+        const id = deletingId;
+        setDeletingId(null);
+        
         const client = isAdmin ? supabaseAdmin : supabase;
         const { error } = await client.from('prayers').delete().eq('id', id);
         if (error) {
@@ -224,7 +242,7 @@ function Prayers() {
                                 comments={comments[p.id]}
                                 expandedComments={expandedComments}
                                 onCommentSubmit={handleCommentSubmit}
-                                onCommentDelete={handleDeleteComment}
+                                onCommentDelete={handleDeleteCommentClick}
                                 commentInput={commentInputs[p.id]}
                                 onCommentInputChange={(id, val) => setCommentInputs(prev => ({ ...prev, [id]: val }))}
                             />
@@ -232,6 +250,20 @@ function Prayers() {
                     </div>
                 )}
             </main>
+
+            <ConfirmModal 
+                isOpen={!!deletingId} 
+                message="Энэ постыг устгах уу?" 
+                onConfirm={confirmDelete} 
+                onCancel={() => setDeletingId(null)} 
+            />
+            
+            <ConfirmModal 
+                isOpen={!!deletingComment} 
+                message="Энэ сэтгэгдлийг устгах уу?" 
+                onConfirm={confirmDeleteComment} 
+                onCancel={() => setDeletingComment(null)} 
+            />
         </div>
     );
 }

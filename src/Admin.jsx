@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 import { uploadToCloudinary } from './lib/cloudinary';
 import { toast } from 'react-toastify';
+import ConfirmModal from './components/ConfirmModal';
 
 const ADMIN_PASSWORD = 'itgel2026';
 
@@ -23,6 +24,7 @@ function Admin() {
         image: '',
         date: ''
     });
+    const [deletingId, setDeletingId] = useState(null);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -186,8 +188,14 @@ function Admin() {
         setLoading(false);
     }
 
-    async function handleDelete(id) {
-        if (!window.confirm('Энэ мэдээг устгах уу?')) return;
+    function handleDelete(id) {
+        setDeletingId(id);
+    }
+
+    async function confirmDelete() {
+        if (!deletingId) return;
+        const id = deletingId;
+        setDeletingId(null);
 
         const { error } = await supabase
             .from('news')
@@ -260,7 +268,7 @@ function Admin() {
                                         className="form-input"
                                     >
                                         <option value="">Ангилал сонгох...</option>
-                                        <option value="Сүм чуулган">Сүм чуулган</option>
+                                        <option value="Цугларалт">Цугларалт</option>
                                         <option value="Библи судлал">Библи судлал</option>
                                         <option value="Гэрчлэл">Гэрчлэл</option>
                                         <option value="Залбирал">Залбирал</option>
@@ -416,6 +424,13 @@ function Admin() {
                     )}
                 </div>
             </div>
+            
+            <ConfirmModal 
+                isOpen={!!deletingId} 
+                message="Энэ мэдээг устгах уу?" 
+                onConfirm={confirmDelete} 
+                onCancel={() => setDeletingId(null)} 
+            />
         </div>
     );
 }

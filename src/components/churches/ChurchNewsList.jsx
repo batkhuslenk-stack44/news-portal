@@ -3,7 +3,7 @@ import React from 'react';
 function ChurchNewsList({ news }) {
     return (
         <section className="church-news-section">
-            <h3 className="serif" style={{ borderBottom: '2px solid var(--border-color)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>Чуулганы мэдээлэл</h3>
+            <h3 className="serif" style={{ borderBottom: '2px solid var(--border-color)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>Цугларалтын мэдээлэл, хөтөлбөр</h3>
             <div className="news-list">
                 {!news || news.length === 0 ? (
                     <p style={{ color: 'var(--text-muted)' }}>Одоогоор мэдээ оруулаагүй байна.</p>

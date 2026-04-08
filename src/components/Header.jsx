@@ -27,7 +27,7 @@ function Header({ user, profile, handleLogout, dateBarInfo }) {
                 </div>
                 <nav className="desktop-only">
                     <ul className="nav-links">
-                        <li><Link to="/churches">Сүм чуулган</Link></li>
+                        <li><Link to="/churches">🤝 Цугларалт</Link></li>
                         <li><Link to="/testimonies">Гэрчлэл</Link></li>
                         <li><Link to="/prayers">Залбирал</Link></li>
                         <li><Link to="/songs">🎵 Магтаал дуу</Link></li>

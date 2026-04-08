@@ -20,10 +20,10 @@ function ChurchList({ churches, onSelectChurch, user, onRegisterClick }) {
         <section>
             <div className="section-header" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                    <h2 className="serif" style={{ margin: 0 }}>Сүм чуулганууд</h2>
+                    <h2 className="serif" style={{ margin: 0 }}>Цугларалт, арга хэмжээнүүд</h2>
                     {user && (
                         <button onClick={onRegisterClick} className="btn btn-primary">
-                            ➕ Сүм бүртгүүлэх
+                            ➕ Цугларалт бүртгүүлэх
                         </button>
                     )}
                 </div>
@@ -31,7 +31,7 @@ function ChurchList({ churches, onSelectChurch, user, onRegisterClick }) {
                 <div className="church-filters" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '0.5rem', background: 'var(--glass-bg)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                     <input 
                         type="text" 
-                        placeholder="🔍 Сүм хайх..." 
+                        placeholder="🔍 Арга хэмжээ хайх..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="form-control"
@@ -52,7 +52,7 @@ function ChurchList({ churches, onSelectChurch, user, onRegisterClick }) {
 
             {filteredChurches.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }} className="glass">
-                    {searchTerm || selectedLocation !== 'Бүх байршил' ? "Хайлтад тохирох сүм олдсонгүй." : "Одоогоор сүм бүртгэгдээгүй байна."}
+                    {searchTerm || selectedLocation !== 'Бүх байршил' ? "Хайлтад тохирох арга хэмжээ олдсонгүй." : "Одоогоор цугларалт бүртгэгдээгүй байна."}
                 </div>
             ) : (
                 <div className="news-grid">
@@ -61,7 +61,7 @@ function ChurchList({ churches, onSelectChurch, user, onRegisterClick }) {
                             <img src={church.image_url || 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800'} alt={church.name} style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px' }} />
                             <h3 className="serif" style={{ marginTop: '1rem' }}>{church.name}</h3>
                             <p className="article-excerpt">📍 {church.address}</p>
-                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>👥 Гишүүдийн тоо: {church.members_count}</p>
+                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>👥 Оролцох хүний тоо: {church.members_count}</p>
                         </article>
                     ))}
                 </div>

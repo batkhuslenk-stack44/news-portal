@@ -6,6 +6,7 @@ import Header from './components/Header';
 import SongUploadForm from './components/songs/SongUploadForm';
 import SongCard from './components/songs/SongCard';
 import { toast } from 'react-toastify';
+import ConfirmModal from './components/ConfirmModal';
 
 function Songs() {
     const [songs, setSongs] = useState([]);
@@ -15,6 +16,7 @@ function Songs() {
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
     const [showUploadForm, setShowUploadForm] = useState(false);
+    const [deletingId, setDeletingId] = useState(null);
 
     const { currentTrack, isPlaying, playTrack } = usePlayer();
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
@@ -96,8 +98,14 @@ function Songs() {
         }
     }
 
-    async function handleDeleteSong(songId) {
-        if (!window.confirm('Энэ дууг устгах уу?')) return;
+    function handleDeleteSong(songId) {
+        setDeletingId(songId);
+    }
+
+    async function confirmDelete() {
+        if (!deletingId) return;
+        const songId = deletingId;
+        setDeletingId(null);
         
         const client = isAdmin ? supabaseAdmin : supabase;
         const { error } = await client.from('worship_songs').delete().eq('id', songId);
@@ -221,6 +229,13 @@ function Songs() {
                     </ul>
                 </div>
             </footer>
+
+            <ConfirmModal 
+                isOpen={!!deletingId} 
+                message="Энэ дууг устгах уу?" 
+                onConfirm={confirmDelete} 
+                onCancel={() => setDeletingId(null)} 
+            />
         </div>
     );
 }

@@ -12,8 +12,8 @@ function ChurchDetail({ church, churchNews, user, onBack, onEditClick, onAddNews
                         <h2 className="serif" style={{ fontSize: '2.5rem' }}>{church.name}</h2>
                         <p style={{ margin: '1rem 0', fontSize: '1.1rem' }}>{church.description}</p>
                         <p><strong>📍 Хаяг:</strong> {church.address}</p>
-                        <p><strong>👥 Гишүүдийн тоо:</strong> {church.members_count}</p>
-                        <p><strong>✨ Үйл ажиллагаа:</strong> {church.activities}</p>
+                        <p><strong>👥 Оролцох хүний тоо:</strong> {church.members_count}</p>
+                        <p><strong>✨ Төрөл:</strong> {church.activities}</p>
                         {church.location_url && (
                             <a href={church.location_url} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline" style={{ marginTop: '1rem', display: 'inline-block' }}>Байршил харах (Google Maps)</a>
                         )}
