@@ -4,6 +4,7 @@ import { supabase } from './lib/supabase';
 import Header from './components/Header';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   const [news, setNews] = useState([]);
@@ -177,6 +178,7 @@ function App() {
         </div>
       </footer>
       <ToastContainer position="bottom-right" theme="dark" />
+      <Analytics />
     </div >
   );
 }
