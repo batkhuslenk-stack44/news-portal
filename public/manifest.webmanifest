@@ -2,7 +2,7 @@
     "name": "Itgeliin Gal",
     "short_name": "ItgeliinGal",
     "description": "Христийн Мэдээ Төв - Мэдээ, Магтаал, Залбирал",
-    "start_url": "/news-portal/",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#020617",
     "theme_color": "#0ea5e9",
