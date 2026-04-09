@@ -76,7 +76,7 @@ function Auth() {
                 data: {
                     username: username.trim(),
                 },
-                emailRedirectTo: window.location.origin + '/news-portal/',
+                emailRedirectTo: window.location.origin + '/',
             },
         });
 
@@ -103,7 +103,7 @@ function Auth() {
 
         setLoading(true);
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + '/news-portal/reset-password',
+            redirectTo: window.location.origin + '/reset-password',
         });
 
         if (error) {

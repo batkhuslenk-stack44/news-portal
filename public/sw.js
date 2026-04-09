@@ -1,9 +1,9 @@
 const CACHE_NAME = 'faith-news-v1';
 const ASSETS = [
-    '/news-portal/',
-    '/news-portal/index.html',
-    '/news-portal/manifest.webmanifest',
-    '/news-portal/favicon.ico'
+    '/',
+    '/index.html',
+    '/manifest.webmanifest',
+    '/icon.png'
 ];
 
 self.addEventListener('install', (event) => {

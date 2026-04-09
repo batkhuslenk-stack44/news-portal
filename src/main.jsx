@@ -19,7 +19,7 @@ import BottomNav from './components/BottomNav'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter basename="/news-portal">
+    <BrowserRouter>
       <ThemeProvider>
         <PlayerProvider>
           <Routes>
@@ -45,7 +45,7 @@ createRoot(document.getElementById('root')).render(
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/news-portal/sw.js')
+    navigator.serviceWorker.register('/sw.js')
       .then(reg => console.log('SW Registered', reg))
       .catch(err => console.log('SW Failed', err));
   });
