@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 
 function ChurchNewsForm({ onSubmit, onCancel, isSubmitting }) {
-    const [newsForm, setNewsForm] = useState({ title: '', content: '' });
+    const [newsForm, setNewsForm] = useState({ title: '', content: '', youtube_url: '' });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(newsForm);
+        
+        const finalContent = newsForm.youtube_url 
+            ? `${newsForm.content}\n\nYT_LINK:${newsForm.youtube_url}`
+            : newsForm.content;
+
+        onSubmit({
+            title: newsForm.title,
+            content: finalContent
+        });
     };
 
     return (
@@ -25,6 +33,16 @@ function ChurchNewsForm({ onSubmit, onCancel, isSubmitting }) {
                     value={newsForm.content} 
                     onChange={e => setNewsForm({ ...newsForm, content: e.target.value })} 
                     required 
+                    rows="4"
+                />
+            </div>
+            <div className="form-group">
+                <label>YouTube бичлэгийн холбоос (заавал биш)</label>
+                <input 
+                    type="url" 
+                    placeholder="https://www.youtube.com/watch?v=..."
+                    value={newsForm.youtube_url} 
+                    onChange={e => setNewsForm({ ...newsForm, youtube_url: e.target.value })} 
                 />
             </div>
             <div className="btn-group">

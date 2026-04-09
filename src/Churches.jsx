@@ -218,7 +218,7 @@ function Churches() {
 
             <footer>
                 <div className="container">
-                    <p>© 2026 FAITH NEWS. Цугларалт, арга хэмжээний мэдээлэл.</p>
+                    <p>© 2026 ITGELIIN GAL. Цугларалт, арга хэмжээний мэдээлэл.</p>
                 </div>
             </footer>
         </div>

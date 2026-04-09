@@ -219,7 +219,7 @@ function Songs() {
 
             <footer style={{ marginBottom: currentTrack ? '90px' : '0' }}>
                 <div className="container">
-                    <h2 className="site-title" style={{ fontSize: '2rem' }}>FAITH NEWS</h2>
+                    <h2 className="site-title" style={{ fontSize: '2rem' }}>ITGELIIN GAL</h2>
                     <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>© 2026 Христийн Мэдээ Төв. Бүх эрх хуулиар хамгаалагдсан.</p>
                     <ul className="nav-links" style={{ gap: '1rem', flexWrap: 'wrap' }}>
                         <li><Link to="/">Нүүр хуудас</Link></li>

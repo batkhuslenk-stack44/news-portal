@@ -14,7 +14,7 @@ function Header({ user, profile, handleLogout, dateBarInfo }) {
         <header>
             <div className="container">
                 <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>
-                    FAITH NEWS
+                    ITGELIIN GAL
                 </Link>
                 <div className="date-bar">
                     {dateBarInfo || (

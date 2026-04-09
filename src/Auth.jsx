@@ -144,7 +144,7 @@ function Auth() {
             <div className="app">
                 <div className="auth-page">
                     <div className="auth-card">
-                        <Link to="/" className="auth-logo serif">FAITH NEWS</Link>
+                        <Link to="/" className="auth-logo serif">ITGELIIN GAL</Link>
 
                         <h1 className="serif">🔒 Шинэ нууц үг</h1>
                         <p className="auth-subtitle">Шинэ нууц үгээ оруулна уу</p>
@@ -181,7 +181,7 @@ function Auth() {
             <div className="app">
                 <div className="auth-page">
                     <div className="auth-card">
-                        <Link to="/" className="auth-logo serif">FAITH NEWS</Link>
+                        <Link to="/" className="auth-logo serif">ITGELIIN GAL</Link>
 
                         <h1 className="serif">🔄 Нууц үг сэргээх</h1>
                         <p className="auth-subtitle">Бүртгэлтэй имэйл хаягаа оруулна уу</p>
@@ -227,7 +227,7 @@ function Auth() {
         <div className="app">
             <div className="auth-page">
                 <div className="auth-card">
-                    <Link to="/" className="auth-logo serif">FAITH NEWS</Link>
+                    <Link to="/" className="auth-logo serif">ITGELIIN GAL</Link>
 
                     <h1 className="serif">
                         {isLogin ? '🔑 Нэвтрэх' : '📝 Бүртгүүлэх'}

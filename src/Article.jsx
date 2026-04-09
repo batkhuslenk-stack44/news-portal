@@ -137,7 +137,7 @@ function Article() {
             {/* Header */}
             <header>
                 <div className="container">
-                    <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>FAITH NEWS</Link>
+                    <Link to="/" className="site-title" style={{ textDecoration: 'none', display: 'block' }}>ITGELIIN GAL</Link>
                     <nav>
                         <ul className="nav-links">
                             <li><Link to="/">← Нүүр хуудас</Link></li>
@@ -234,7 +234,7 @@ function Article() {
 
             <footer>
                 <div className="container">
-                    <h2 className="site-title" style={{ fontSize: '2rem' }}>FAITH NEWS</h2>
+                    <h2 className="site-title" style={{ fontSize: '2rem' }}>ITGELIIN GAL</h2>
                     <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>© 2026 Христийн Мэдээ Төв. Бүх эрх хуулиар хамгаалагдсан.</p>
                 </div>
             </footer>
