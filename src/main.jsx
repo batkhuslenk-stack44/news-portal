@@ -17,31 +17,44 @@ import { ThemeProvider } from './context/ThemeContext'
 import GlobalPlayer from './components/GlobalPlayer'
 import BottomNav from './components/BottomNav'
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <ThemeProvider>
-        <PlayerProvider>
-          <Routes>
-            <Route path="/" element={<App />} />
-            <Route path="/churches" element={<Churches />} />
-            <Route path="/prayers" element={<Prayers />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/login" element={<Auth />} />
-            <Route path="/register" element={<Auth />} />
-            <Route path="/article/:id" element={<Article />} />
-            <Route path="/testimonies" element={<Testimonies />} />
-            <Route path="/songs" element={<Songs />} />
-            <Route path="/audiobooks" element={<Audiobooks />} />
-            <Route path="/reset-password" element={<Auth />} />
-          </Routes>
-          <BottomNav />
-          <GlobalPlayer />
-        </PlayerProvider>
-      </ThemeProvider>
-    </BrowserRouter>
-  </StrictMode>,
-)
+// Check for environment variables
+const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!isSupabaseConfigured && window.location.hostname !== 'localhost') {
+  createRoot(document.getElementById('root')).render(
+    <div style={{ padding: '2rem', textAlign: 'center', fontFamily: 'sans-serif' }}>
+      <h1>🛠️ Configuration Error</h1>
+      <p>Supabase connection details are missing.</p>
+      <p>Please check Vercel Environment Variables: <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>.</p>
+    </div>
+  );
+} else {
+  createRoot(document.getElementById('root')).render(
+    <StrictMode>
+      <BrowserRouter>
+        <ThemeProvider>
+          <PlayerProvider>
+            <Routes>
+              <Route path="/" element={<App />} />
+              <Route path="/churches" element={<Churches />} />
+              <Route path="/prayers" element={<Prayers />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/login" element={<Auth />} />
+              <Route path="/register" element={<Auth />} />
+              <Route path="/article/:id" element={<Article />} />
+              <Route path="/testimonies" element={<Testimonies />} />
+              <Route path="/songs" element={<Songs />} />
+              <Route path="/audiobooks" element={<Audiobooks />} />
+              <Route path="/reset-password" element={<Auth />} />
+            </Routes>
+            <BottomNav />
+            <GlobalPlayer />
+          </PlayerProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </StrictMode>,
+  )
+}
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
